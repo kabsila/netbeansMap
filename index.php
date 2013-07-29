@@ -2,9 +2,29 @@
  <?php
 
     $lon = 15.24593;
-    $lat = 104.853931;
+    $lat1 = 104.853931;
     $zoom = 12;
+    
+// Create connection
+   $con=mysqli_connect("localhost","root","","testlatlong");
 
+// Check connection
+    if (mysqli_connect_errno($con))
+    {
+      echo "Failed to connect to MySQL: " . mysqli_connect_error();
+    }
+    $result = mysqli_query($con,"SELECT * FROM forlatlong WHERE id='1'");
+    
+    
+    while($row = mysqli_fetch_array($result))
+      {
+       $latt = $row['lat'];
+       $longg = $row['long'];
+       echo $row['lat'] . " " . $row['long'];
+       echo "<br>";
+      }
+
+ 
 ?>
 <html>
   <head>
@@ -19,18 +39,17 @@
     </style> 
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdvwF7XYm-l-CeqTLrwHQCjDbIxThB1As&sensor=true&libraries=places">
-    </script>
-    
+    </script>    
     <script type="text/javascript">
       function initialize() {
-      var mapOptions = {
-          center: new google.maps.LatLng(15.24593, 104.853931),
-          zoom: <?php echo $zoom;?>,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
+      //var mapOptions = {
+      //    center: new google.maps.LatLng(15.24593, 104.853931),
+       //   zoom: <?php echo $zoom;?>,
+       //   mapTypeId: google.maps.MapTypeId.ROADMAP
+       // };
         
-        var map = new google.maps.Map(document.getElementById("map-canvas"),
-            mapOptions);
+       // var map = new google.maps.Map(document.getElementById("map-canvas"),
+       //     mapOptions);
             
        var map = new google.maps.Map(document.getElementById('map-canvas'), {
     mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -90,7 +109,33 @@
     
      google.maps.event.addDomListener(window, 'load', initialize);
     </script>
-    
+    <script>
+function showUser(str)
+{
+if (str=="")
+  {
+  document.getElementById("txtHint").innerHTML="";
+  return;
+  } 
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
+    }
+  }
+xmlhttp.open("GET","getdb.php?q="+str.value,true);
+xmlhttp.send();
+}
+</script>
     
     <script type="text/javascript">
       function getLong () {
@@ -111,10 +156,15 @@
    
   </head>
   <body>
-    <input type="text" name="long" id="long" value="16.430816" ></input>
-    <button id="aa" type="button" onclick="getLong();">Click Me!</button>
+        <form>
+            <input type="text" name="txtId" id="txtId" value="">
+            <input name="btnButton" id="btnButton" type="button" onclick="showUser(document.getElementById('txtId'))" value="Ajax">
+        </form>
+     <div id="txtHint"><b>Lat Long info will be listed here.</b></div>
+    <input type="text" name="long" value=""></input>
+    
     <div id="panel">    
-      <center><input id="target" type="text" placeholder="Search Box"></input></center>
+      <center><input id="target" type="text" placeholder="Search Box" value="<?php echo $latt.",".$longg ?>" ></input></center>
     </div>
       <div id="map-canvas"/></div>
      
