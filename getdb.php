@@ -17,7 +17,7 @@
        $latt = $row['lat'];
        $longg = $row['long'];
        echo $row['lat'] . " " . $row['long'];
-       echo "<br>";
+       //echo "<br>";
       }
 
     mysqli_close($con);

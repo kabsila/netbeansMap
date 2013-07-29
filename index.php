@@ -65,7 +65,8 @@
   
 
   var input = /** @type {HTMLInputElement} */(document.getElementById('target'));
-  var searchBox = new google.maps.places.SearchBox(input);
+  var searchBox = new google.maps.places.SearchBox(input);  
+  //var searchBox = new google.maps.places.SearchBox(latlong);
   var markers = [];
 
   google.maps.event.addListener(searchBox, 'places_changed', function() {
@@ -130,6 +131,11 @@ xmlhttp.onreadystatechange=function()
   if (xmlhttp.readyState==4 && xmlhttp.status==200)
     {
     document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
+    var str=xmlhttp.responseText;
+    var n=str.indexOf(" ");
+    var latt = str.substring(0,n);
+    var longg = str.substring(n,str.Lengh);
+    initialize2(latt,longg);
     }
   }
 xmlhttp.open("GET","getdb.php?q="+str.value,true);
@@ -137,25 +143,20 @@ xmlhttp.send();
 }
 </script>
     
-    <script type="text/javascript">
-      function getLong () {
-        var glong = document.getElementById('long').value;
-        
+<script type="text/javascript">
+      function initialize2(lat,long) {
         var mapOptions = {
-          center: new google.maps.LatLng(glong, 102.826484),
-          zoom: <?php echo $zoom;?>,
+          center: new google.maps.LatLng(lat,long),
+          zoom: 13,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         var map = new google.maps.Map(document.getElementById("map-canvas"),
             mapOptions);
       }
-      google.maps.event.addDomListener(window, 'load', initialize);
-              //16.430816,102.826484
+      google.maps.event.addDomListener(window, 'load', initialize2);
     </script>
-    
-   
-  </head>
-  <body>
+</head>
+<body>
         <form>
             <input type="text" name="txtId" id="txtId" value="">
             <input name="btnButton" id="btnButton" type="button" onclick="showUser(document.getElementById('txtId'))" value="Ajax">
@@ -164,11 +165,11 @@ xmlhttp.send();
     <input type="text" name="long" value=""></input>
     
     <div id="panel">    
-      <center><input id="target" type="text" placeholder="Search Box" value="<?php echo $latt.",".$longg ?>" ></input></center>
+      <center><input id="target" type="text" placeholder="Search Box" ></input></center>
     </div>
       <div id="map-canvas"/></div>
      
-  </body>
+</body>
   
   
 </html>
