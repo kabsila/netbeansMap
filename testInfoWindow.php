@@ -53,6 +53,7 @@ function placeMarker(location) {
   
    marker = new google.maps.Marker({
     position: location,
+    animation: google.maps.Animation.DROP,
     map: map,
   });
   markers.push(marker);
